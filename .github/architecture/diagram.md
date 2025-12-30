@@ -4,17 +4,18 @@ This file contains a simple Mermaid diagram visualizing the hexagonal architectu
 
 ```mermaid
 flowchart LR
-  subgraph Domain [Domain (Core)]
-    SW[SmallerWebHexagon]
-    R[Rater\n(port)]
+
+  subgraph Domain
+    SW["SmallerWebHexagon"]
+    R["Rater\n(port)"]
   end
 
-  subgraph Adapters [Adapters]
-    Web[WebAdapter\n(Spark HTTP)]
-    IC[InCodeRater\n(outbound adapter)]
-    FR[FileRater\n(outbound adapter)]
-    AM[AppMain\n(bootstrap)]
-    T[templates/result_view.html\n(resource)]
+  subgraph Adapters
+    Web["WebAdapter\n(Spark HTTP)"]
+    IC["InCodeRater\n(outbound adapter)"]
+    FR["FileRater\n(outbound adapter)"]
+    AM["AppMain\n(bootstrap)"]
+    T["templates/result_view.html\n(resource)"]
   end
 
   %% Relationships
@@ -27,12 +28,12 @@ flowchart LR
   Web -->|renders template| T
 
   %% Request flow numbers
-  subgraph Flow [Request Flow]
+  subgraph Flow
     F1([1. Client GET /:value])
-    F2([2. `WebAdapter` parses `:value`])
-    F3([3. `SmallerWebHexagon.rateAndResult(value)`])
-    F4([4. `Rater` implementation computes rate/result])
-    F5([5. `WebAdapter` renders HTML template and returns response])
+    F2([2. WebAdapter parses :value])
+    F3([3. SmallerWebHexagon.rateAndResult(value)])
+    F4([4. Rater implementation computes rate/result])
+    F5([5. WebAdapter renders HTML template and returns response])
   end
   F1 --> Web
   Web --> F2 --> SW --> F3 --> R --> F4
