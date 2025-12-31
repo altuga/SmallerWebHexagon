@@ -46,32 +46,27 @@ public class FileRater implements Rater {
         }
     }
 
-    @Override
+   
     /**
-     * Determine the rate for the given input value using the loaded rules.
+     * Rates the given value based on the rules loaded from the file.
      *
-     * <p>Current simple behavior (uses only the first two rules if available):
-     * <ul>
-     *   <li>If there are at least two rows, let {@code min0} be the first number
-     *       of the first row, {@code r0} the second number of the first row and
-     *       {@code r1} the second number of the second row.</li>
-     *   <li>If {@code value >= min0 && value < secondRowMin} returns {@code r0}.</li>
-     *   <li>If {@code value >= min0} returns {@code r1}.</li>
-     * </ul>
-     * If fewer than two rules are present the method returns {@code 1.0}.
+     * <p>The method applies the first rule where the value meets the threshold.
+     * If fewer than 2 rules are loaded, returns 1.0 as default.
      *
-     * <p>Examples with file:
+     * @param value the integer value to rate
+     * @return the rating as a double, or 1.0 if no rules apply
+     *
+     * <p>Example with rules file:
      * <pre>
      * 0 0.8
      * 100 1.2
      * </pre>
-     * <ul>
-     *   <li>input 50 => returns 0.8</li>
-     *   <li>input 150 => returns 1.2</li>
-     * </ul>
      *
-     * @param value integer value to rate
-     * @return the computed rate (double)
+     * <ul>
+     *   <li>rate(50) returns 0.8 (50 >= 0 and 50 < 100)</li>
+     *   <li>rate(150) returns 1.2 (150 >= 100)</li>
+     *   <li>rate(-10) returns 1.0 (less than first threshold)</li>
+     * </ul>
      */
     public double rate(int value) {
         if (rates.size() >= 2) {
