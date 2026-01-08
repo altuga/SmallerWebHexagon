@@ -1,7 +1,8 @@
 package com.example.smallerwebhexagon;
 
-import static spark.Spark.*;
-
+import com.sun.net.httpserver.HttpServer;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -17,14 +18,29 @@ public class WebAdapter {
     }
 
     public void start() {
-        get("/:value", (req, res) -> {
-            String raw = req.params(":value");
-            int value = numberOrZero(raw);
-            SmallerWebHexagon.RateResult rr = hex.rateAndResult(value);
-            String page = render(rr);
-            res.type("text/html");
-            return page;
-        });
+        try {
+            HttpServer server = HttpServer.create(new InetSocketAddress(4567), 0);
+            server.createContext("/", exchange -> {
+                String path = exchange.getRequestURI().getPath();
+                // Simple parsing to mimic spark's /:value
+                String raw = path.length() > 1 ? path.substring(1) : "";
+
+                int value = numberOrZero(raw);
+                SmallerWebHexagon.RateResult rr = hex.rateAndResult(value);
+                String page = render(rr);
+
+                exchange.getResponseHeaders().set("Content-Type", "text/html");
+                byte[] responseBytes = page.getBytes(StandardCharsets.UTF_8);
+                exchange.sendResponseHeaders(200, responseBytes.length);
+                try (OutputStream os = exchange.getResponseBody()) {
+                    os.write(responseBytes);
+                }
+            });
+            server.setExecutor(null);
+            server.start();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to start server", e);
+        }
     }
 
     private int numberOrZero(String s) {
@@ -41,3 +57,4 @@ public class WebAdapter {
                 .replace("${result}", Double.toString(r.result));
     }
 }
+
