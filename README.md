@@ -2,7 +2,7 @@
 
 A Java application demonstrating **Hexagonal Architecture** (Ports & Adapters pattern) with a web interface for rating calculations.
 
-## Architecture Overview
+## Architecture Overview !
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
