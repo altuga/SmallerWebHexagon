@@ -1,5 +1,9 @@
 package com.example.smallerwebhexagon;
 
+
+/**
+ * Core business logic
+ */
 public class SmallerWebHexagon {
     private final Rater rater;
 
@@ -8,8 +12,8 @@ public class SmallerWebHexagon {
     }
 
     public RateResult rateAndResult(int value) {
-        double rate = rater.rate(value);
-        double result = value * rate;
+        double rate = rater.rate(value); //  where business logic and port- adapters meet
+        double result = value * (1-rate/100); // core business logic
         return new RateResult(value, rate, result);
     }
 

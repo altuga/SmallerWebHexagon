@@ -8,6 +8,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+
+// test
 public class WebAdapter {
     private final SmallerWebHexagon hex;
     private final String template;
@@ -24,11 +26,11 @@ public class WebAdapter {
                 String path = exchange.getRequestURI().getPath();
                 // Simple parsing to mimic spark's /:value
                 String raw = path.length() > 1 ? path.substring(1) : "";
-
+                
                 int value = numberOrZero(raw);
                 SmallerWebHexagon.RateResult rr = hex.rateAndResult(value);
                 String page = render(rr);
-
+                
                 exchange.getResponseHeaders().set("Content-Type", "text/html");
                 byte[] responseBytes = page.getBytes(StandardCharsets.UTF_8);
                 exchange.sendResponseHeaders(200, responseBytes.length);
